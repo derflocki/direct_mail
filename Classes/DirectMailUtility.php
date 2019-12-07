@@ -1425,7 +1425,10 @@ class DirectMailUtility
                 if ($res == 1) {
                     $htmlmail->charset = $matches[1];
                 } elseif (isset($params['direct_mail_charset'])) {
-                    $htmlmail->charset = $GLOBALS['LANG']->csConvObj->parse_charset($params['direct_mail_charset']);
+                    /** @var \TYPO3\CMS\Core\Charset\CharsetConverter $charsetConverter */
+                    $charsetConverter = GeneralUtility::makeInstance(\TYPO3\CMS\Core\Charset\CharsetConverter::class);
+                    //$htmlmail->charset = $GLOBALS['LANG']->csConvObj->parse_charset($params['direct_mail_charset']);
+                    $htmlmail->charset = $charsetConverter->parse_charset($params['direct_mail_charset']);
                 } else {
                     $htmlmail->charset = 'iso-8859-1';
                 }

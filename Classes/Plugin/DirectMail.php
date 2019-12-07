@@ -267,11 +267,21 @@ class DirectMail extends AbstractPlugin
      */
     public function getImagesStandard(array &$imagesArray, $uploadPath = 'uploads/pics/')
     {
+        # Xiaoling Peng <pengmaradi@gmail.com> ISSUE: https://github.com/kartolo/direct_mail/issues/146
+        // $images = explode(',', $this->cObj->data['image']);
+        // foreach ($images as $file) {
+        //     if (strlen(trim($file)) > 0) {
+        //         $imagesArray[] = $this->getUrl($uploadPath . $file);
+        //     }
+        // }
+
+        $uid = (int)$this->cObj->data['uid'];
         $images = explode(',', $this->cObj->data['image']);
-        foreach ($images as $file) {
-            if (strlen(trim($file)) > 0) {
-                $imagesArray[] = $this->getUrl($uploadPath . $file);
-            }
+        $fileRepository = GeneralUtility::makeInstance(\TYPO3\CMS\Core\Resource\FileRepository::class);
+        $fileObjects = $fileRepository->findByRelation('tt_content', 'image', $uid);
+        //$imageOriginalFile = $fileObjects[0]->getOriginalFile()->getIdentifier();
+        foreach ($fileObjects as $file) {
+            $imagesArray[] = $this->siteUrl . 'fileadmin'. $file->getOriginalFile()->getIdentifier();
         }
     }
 
